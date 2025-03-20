@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Clone</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="sidebar">
+        <h2>XIn chào Ngọc Qúy</h2>
+        <ul>
+            <li><a href="home.html" class="active">Tổng quan</a></li>
+            <li><a href="login-history.html">Lịch sử đăng nhập trong ngày</a></li>
+            <li><a href="speedNetwork.html">Tốc độ mạng sử dụng</a></li>
+            <li><a href="sumData.html">Lưu lượng mạng đã dùng</a></li>
+            <li><a href="index.html" id="logoutButton">Đăng xuất</a></li>
+        </ul>
+    </div>
+
+    <div class="main-content">
+        <header>
+            <input type="text" placeholder="Search domain...">
+            <button>Compare</button>
+        </header>
+        <section class="overview">
+            <h2>Dung lượng mạng sử dụng trong 7 ngày gần nhất</h2>
+            <canvas id="data-usage-chart"></canvas>
+        </section>  
+    </div>
+
+    <script>
+        // Dữ liệu giả lập dung lượng mạng sử dụng trong 7 ngày gần nhất (MB)
+        const dataUsage = [1200, 1500, 1800, 800, 2100, 1300, 1700]; 
+        
+        // Tính mức trung bình
+        const averageUsage = dataUsage.reduce((a, b) => a + b, 0) / dataUsage.length;
+
+        // Tạo màu sắc cho các cột: đỏ cho dung lượng cao, xanh cho dung lượng thấp
+        const barColors = dataUsage.map(usage => usage > averageUsage ? 'red' : 'green');
+
+        // Biểu đồ cột dung lượng mạng sử dụng
+        const ctx = document.getElementById('data-usage-chart').getContext('2d');
+        const dataUsageChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['Ngày 1', 'Ngày 2', 'Ngày 3', 'Ngày 4', 'Ngày 5', 'Ngày 6', 'Ngày 7'],
+                datasets: [{
+                    label: 'Dung lượng mạng sử dụng (MB)',
+                    data: dataUsage,
+                    backgroundColor: barColors,
+                    borderColor: 'rgba(0, 0, 0, 0.1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        labels: {
+                            generateLabels: (chart) => {
+                                return [
+                                    { text: 'Dung lượng cao (Trên mức trung bình)', fillStyle: 'red' },
+                                    { text: 'Dung lượng thấp (Dưới mức trung bình)', fillStyle: 'green' }
+                                ];
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Dung lượng (MB)'
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

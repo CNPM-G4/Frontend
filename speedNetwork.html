@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Clone</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="sidebar">
+        <h2>XIn chào Ngọc Qúy</h2>
+        <ul>
+            <li><a href="home.html" class="active">Tổng quan</a></li>
+            <li><a href="login-history.html">Lịch sử đăng nhập trong ngày</a></li>
+            <li><a href="speedNetwork.html">Tốc độ mạng sử dụng</a></li>
+            <li><a href="sumData.html">Lưu lượng mạng đã dùng</a></li>
+            <li><a href="index.html" id="logoutButton">Đăng xuất</a></li>
+        </ul>
+    </div>
+
+    <div class="main-content">
+        <header>
+            <input type="text" placeholder="Search domain...">
+            <button>Compare</button>
+        </header>
+        <section class="overview">
+            <h2>Tốc độ mạng hiện tại</h2>
+            <div id="network-speed-container">
+                <p>Tốc độ mạng: <span id="network-speed">0 Mbps</span></p>
+                <p>Lưu lượng mạng đã dùng: <span id="data-usage">0 MB</span></p>
+                <canvas id="network-speed-chart"></canvas>
+            </div>
+
+            <!-- Nút chi tiết đăng nhập -->
+            <button id="detailButton" onclick="showDetails()" style="display: none;"></button>
+        </section>  
+
+        <!-- Chi tiết đăng nhập cho mỗi ngày -->
+        <div class="login-details" id="loginDetails" style="display: none;">
+            <button id="backButton" onclick="backToChart()">Quay lại</button>
+            <div id="details"></div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        // Dữ liệu ban đầu cho biểu đồ tốc độ mạng
+        let speedData = {
+            labels: [],
+            datasets: [{
+                label: 'Tốc độ mạng (Mbps)',
+                data: [],
+                fill: false,
+                borderColor: 'rgba(75, 192, 192, 1)',
+                tension: 0.1
+            }]
+        };
+
+        const configSpeedChart = {
+            type: 'line',
+            data: speedData,
+            options: {
+                responsive: true,
+                scales: {
+                    x: {
+                        type: 'linear',
+                        position: 'bottom'
+                    },
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        };
+
+        const networkSpeedChart = new Chart(
+            document.getElementById('network-speed-chart'),
+            configSpeedChart
+        );
+
+        // Biến để theo dõi tổng số dung lượng mạng đã sử dụng
+        let totalDataUsage = 0;
+
+        // Biến để dừng việc cập nhật tốc độ mạng khi đăng xuất
+        let isLoggedIn = true;
+
+        // Hàm để cập nhật tốc độ mạng mỗi 5 giây
+        function updateNetworkSpeed() {
+            if (!isLoggedIn) return;
+
+            // Random tốc độ mạng giữa 1 và 100 Mbps
+            const speed = Math.floor(Math.random() * 100) + 1;
+            const currentTime = new Date().getTime();
+            const timeInSeconds = Math.floor(currentTime / 1000);
+
+            // Cập nhật ô hiển thị tốc độ mạng
+            document.getElementById('network-speed').innerText = `${speed} Mbps`;
+
+            // Cập nhật dữ liệu cho biểu đồ
+            speedData.labels.push(timeInSeconds);
+            speedData.datasets[0].data.push(speed);
+            networkSpeedChart.update();
+
+            // Tính và cập nhật dung lượng mạng đã dùng (1 phút = 3 lần cập nhật tốc độ)
+            totalDataUsage += speed * 3;  // Cập nhật tổng dung lượng (dùng 3 lần mỗi phút)
+            document.getElementById('data-usage').innerText = `${(totalDataUsage / 1024).toFixed(2)} MB`; // Hiển thị MB
+        }
+
+        const speedUpdateInterval = setInterval(updateNetworkSpeed, 1000);
+
+        // Xử lý sự kiện đăng xuất
+        document.getElementById('logoutButton').addEventListener('click', function() {
+            // Dừng cập nhật tốc độ mạng khi đăng xuất
+            isLoggedIn = false;
+            clearInterval(speedUpdateInterval); // Dừng interval
+            alert(`Tổng dung lượng mạng đã dùng trong ngày: ${(totalDataUsage / 1024).toFixed(2)} MB`);
+        });
+    </script>
+</body>
+</html>

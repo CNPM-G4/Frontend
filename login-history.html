@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Clone</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="sidebar">
+        <h2>XIn chào Ngọc Qúy</h2>
+        <ul>
+            <li><a href="home.html" class="active">Tổng quan</a></li>
+            <li><a href="login-history.html">Lịch sử đăng nhập trong ngày</a></li>
+            <li><a href="speedNetwork.html">Tốc độ mạng sử dụng</a></li>
+            <li><a href="sumData.html">Lưu lượng mạng đã dùng</a></li>
+            <li><a href="index.html">Đăng xuất</a></li>
+        </ul>
+    </div>
+
+    <div class="main-content">
+        <header>
+            <input type="text" placeholder="Search domain...">
+            <button>Compare</button>
+        </header>
+        <section class="overview">
+            <h2>Lịch sử đăng nhập trong tuần</h2>
+            <div class="chart-container" id="chart-container">
+                <canvas id="loginChart"></canvas>
+            </div>
+
+            <!-- Nút chi tiết đăng nhập -->
+            <button id="detailButton" onclick="showDetails()" style="display: none;"></button>
+        </section>  
+
+        <!-- Chi tiết đăng nhập cho mỗi ngày -->
+        <div class="login-details" id="loginDetails" style="display: none;">
+            <button id="backButton" onclick="backToChart()">Quay lại</button>
+            <div id="details"></div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        // Dữ liệu ví dụ cho biểu đồ đăng nhập trong tuần
+        const loginData = {
+            labels: ['Thứ 2', 'Thứ 3', 'Thứ 4', 'Thứ 5', 'Thứ 6', 'Thứ 7', 'Chủ nhật'],
+            datasets: [{
+                label: 'Số lần đăng nhập',
+                data: [5, 3, 8, 2, 7, 6, 4], // Số liệu đăng nhập trong 7 ngày
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 1
+            }]
+        };
+
+        const config = {
+            type: 'bar',
+            data: loginData,
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                },
+                onClick: function (e) {
+                    const activePoints = loginChart.getElementsAtEventForMode(e, 'nearest', { intersect: true }, true);
+                    if (activePoints.length > 0) {
+                        const index = activePoints[0].index;
+                        showLoginDetails(index);
+                    }
+                }
+            }
+        };
+
+        // Khởi tạo biểu đồ
+        const loginChart = new Chart(
+            document.getElementById('loginChart'),
+            config
+        );
+
+        // Dữ liệu chi tiết thời gian đăng nhập và đăng xuất (mỗi ngày có thể có nhiều lần đăng nhập)
+        const loginDetails = {
+            0: [{ login: '08:00 AM', logout: '09:00 AM' }, { login: '01:00 PM', logout: '02:30 PM' }, { login: '05:00 PM', logout: '06:00 PM' }], // Thứ 2
+            1: [{ login: '09:00 AM', logout: '10:00 AM' }, { login: '02:00 PM', logout: '03:00 PM' }], // Thứ 3
+            2: [{ login: '07:30 AM', logout: '08:30 AM' }, { login: '12:30 PM', logout: '01:30 PM' }, { login: '04:00 PM', logout: '05:00 PM' }], // Thứ 4
+            3: [{ login: '08:15 AM', logout: '09:00 AM' }, { login: '01:00 PM', logout: '02:00 PM' }], // Thứ 5
+            4: [{ login: '09:00 AM', logout: '10:00 AM' }, { login: '03:00 PM', logout: '04:00 PM' }, { login: '06:00 PM', logout: '07:00 PM' }], // Thứ 6
+            5: [{ login: '07:45 AM', logout: '08:30 AM' }, { login: '02:30 PM', logout: '03:30 PM' }], // Thứ 7
+            6: [{ login: '10:00 AM', logout: '11:00 AM' }, { login: '03:00 PM', logout: '04:30 PM' }]  // Chủ nhật
+        };
+
+        // Hàm hiển thị chi tiết khi nhấn vào biểu đồ
+        function showLoginDetails(dayIndex) {
+            const detailsDiv = document.getElementById('details');
+            const dayLabels = ['Thứ 2', 'Thứ 3', 'Thứ 4', 'Thứ 5', 'Thứ 6', 'Thứ 7', 'Chủ nhật'];
+            const day = dayLabels[dayIndex];
+            const details = loginDetails[dayIndex];
+
+            let detailsHTML = `<p><strong>${day}:</strong></p>`;
+            details.forEach(detail => {
+                detailsHTML += `
+                    <p>Đăng nhập: ${detail.login} - Đăng xuất: ${detail.logout}</p>
+                `;
+            });
+
+            detailsDiv.innerHTML = detailsHTML;
+
+            // Ẩn biểu đồ và hiển thị chi tiết
+            document.getElementById('chart-container').style.display = 'none';
+            document.getElementById('detailButton').style.display = 'none'; // Ẩn nút chi tiết
+            document.getElementById('loginDetails').style.display = 'block'; // Hiển thị chi tiết
+        }
+
+        // Hàm quay lại hiển thị biểu đồ
+        function backToChart() {
+            document.getElementById('chart-container').style.display = 'block'; // Hiển thị biểu đồ
+            document.getElementById('detailButton').style.display = 'inline-block'; // Hiển thị nút chi tiết
+            document.getElementById('loginDetails').style.display = 'none'; // Ẩn chi tiết
+        }
+
+        // Hàm hiển thị chi tiết khi nhấn vào nút chi tiết
+        function showDetails() {
+            const activeIndex = loginChart.getActiveElements()[0].index; // Lấy chỉ số ngày từ biểu đồ
+            showLoginDetails(activeIndex); // Hiển thị chi tiết cho ngày đó
+        }
+    </script>
+</body>
+</html>
