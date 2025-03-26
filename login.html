@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng Nhập & Đăng Ký</title>
+    <style>
+        /* CSS Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* General Styles */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        /* Container for forms */
+        .auth-container {
+            width: 100%;
+            max-width: 400px;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Form Styles */
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        form label {
+            font-weight: bold;
+        }
+
+        form input {
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        form button {
+            padding: 12px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        form button:hover {
+            background-color: #2980b9;
+        }
+
+        /* Switch between forms */
+        .login-form, .register-form {
+            display: block;
+        }
+
+        p {
+            text-align: center;
+        }
+
+        p a {
+            color: #3498db;
+            text-decoration: none;
+        }
+
+        p a:hover {
+            text-decoration: underline;
+        }
+
+        /* Error message style */
+        .error-message {
+            color: red;
+            text-align: center;
+        }
+
+        /* Phone error message style */
+        .phone-error {
+            color: red;
+            font-size: 12px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="auth-container">
+        <!-- Form Đăng Nhập -->
+        <div class="login-form">
+            <h2>Đăng Nhập</h2>
+            <form id="login-form">
+                <label for="phone">Số điện thoại:</label>
+                <input type="text" id="phone" name="phone" required placeholder="Nhập số điện thoại">
+                <div id="phone-error" class="phone-error">Số điện thoại không hợp lệ</div>
+                
+                <label for="password">Mật khẩu:</label>
+                <input type="password" id="password" name="password" required placeholder="Nhập mật khẩu">
+                
+                <button type="submit">Đăng Nhập</button>
+                
+                <p>Chưa có tài khoản? <a href="register.html" onclick="showRegisterForm()">Đăng ký ngay</a></p>
+            </form>
+
+            <!-- Error message will be displayed here -->
+            <div id="error-message" class="error-message" style="display:none;">
+                Tài khoản hoặc mật khẩu không đúng.
+            </div>
+        </div>
+
+        <!-- Form Đăng Ký -->
+        <div class="register-form" style="display:none;">
+            <h2>Đăng Ký</h2>
+            <form action="" method="POST">
+                <label for="fullname">Họ và tên:</label>
+                <input type="text" id="fullname" name="fullname" required placeholder="Nhập họ và tên">
+                
+                <label for="register-phone">Số điện thoại:</label>
+                <input type="text" id="register-phone" name="register-phone" required placeholder="Nhập số điện thoại đăng ký">
+                
+                <label for="register-password">Mật khẩu:</label>
+                <input type="password" id="register-password" name="register-password" required placeholder="Nhập mật khẩu">
+                
+                <label for="confirm-password">Xác nhận mật khẩu:</label>
+                <input type="password" id="confirm-password" name="confirm-password" required placeholder="Xác nhận mật khẩu">
+                
+                <button type="submit">Đăng Ký</button>
+                
+                <p>Đã có tài khoản? <a href="#" onclick="showLoginForm()">Đăng nhập ngay</a></p>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Kiểm tra số điện thoại hợp lệ
+        function validatePhone(phone) {
+            const phonePattern = /^(0[3|5|7|8|9])+([0-9]{8})$/;
+            return phonePattern.test(phone);
+        }
+
+        // Chuyển sang form Đăng Nhập
+        function showLoginForm() {
+            document.querySelector('.login-form').style.display = 'block';
+            document.querySelector('.register-form').style.display = 'none';
+        }
+
+        // Chuyển sang form Đăng Ký
+        function showRegisterForm() {
+            document.querySelector('.login-form').style.display = 'none';
+            document.querySelector('.register-form').style.display = 'block';
+        }
+
+        // Xử lý sự kiện submit của form Đăng Nhập
+document.getElementById('login-form').addEventListener('submit', async function(event) {
+    event.preventDefault(); // Ngừng hành động mặc định của form (không reload trang)
+
+    // Lấy giá trị người dùng nhập
+    const phone = document.getElementById('phone').value;
+    const password = document.getElementById('password').value;
+
+    // Kiểm tra điều kiện số điện thoại và mật khẩu đặc biệt
+    if (phone === '00000000' && password === '11111111') {
+        window.location.href = 'admin.html';  // Chuyển hướng đến trang admin.html
+        return;
+    }
+    if (phone === '00000000' && password === '22222222') {
+        window.location.href = 'home.html';  // Chuyển hướng đến trang admin.html
+        return;
+    }
+    if (!validatePhone(phone)) {
+        document.getElementById('phone-error').style.display = 'block';
+        return;
+    } else {
+        document.getElementById('phone-error').style.display = 'none';
+    }
+
+    try {
+        // Gửi yêu cầu API đến backend để kiểm tra đăng nhập
+        const response = await fetch('http://localhost:8090/api/user', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ phone, password })
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+            window.location.href = 'home.html';
+        } else {
+            document.getElementById('error-message').style.display = 'block';
+        }
+    } catch (error) {
+        console.error('Lỗi khi gửi yêu cầu:', error);
+        document.getElementById('error-message').style.display = 'block';
+    }
+});
+
+    </script>
+</body>
+</html>
