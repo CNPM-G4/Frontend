@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trang Chủ</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+        }
+
+        /* Header */
+        header {
+            display: flex;
+            justify-content: space-between;
+            padding: 20px;
+            background-color: #2c3e50;
+            color: white;
+        }
+
+        header .logo img {
+            width: 150px;
+        }
+
+        header nav ul {
+            display: flex;
+            list-style: none;
+        }
+
+        header nav ul li {
+            margin-left: 20px;
+        }
+
+        header nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-size: 16px;
+        }
+
+        header nav ul li a:hover {
+            color: #3498db;
+        }
+
+        /* Hero Section with Background Image */
+        .hero {
+            background-image: url('https://ptit.edu.vn/wp-content/uploads/2024/08/SV-3.png'); /* Background image */
+            background-size: cover;
+            background-position: center;
+            height: 80vh;
+            color: rgb(238, 77, 77);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            flex-direction: column;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+        }
+
+        .hero p {
+            font-size: 1.5rem;
+            margin-bottom: 30px;
+        }
+
+        .hero .btn-container {
+            display: flex;
+            gap: 20px;  /* Tạo khoảng cách giữa các nút */
+        }
+
+        .hero .btn {
+            padding: 10px 20px;
+            background-color: #3498db;
+            color: white;
+            text-decoration: none;
+            font-size: 16px;
+            border-radius: 5px;
+            width: 200px; /* Đặt chiều rộng cho các nút */
+            text-align: center;
+        }
+
+        .hero .btn:hover {
+            background-color: #2980b9;
+        }
+
+        /* Footer */
+        footer {
+            background-color: #2c3e50;
+            color: white;
+            text-align: center;
+            padding: 10px;
+            position: fixed;
+            width: 100%;
+            bottom: 0;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="logo">
+            <!-- Có thể thêm logo vào đây nếu cần -->
+        </div>
+        <nav>
+            <ul>
+                <li><a href="#">Ptit</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Main Section with Background Image -->
+    <section class="hero">
+        <h1>Chào Mừng Đến Với Trang QUẢN LÝ MẠNG TRUY CẬP VÔ TUYẾN (RAN)</h1>
+        <div class="btn-container">
+            <!-- Đã cập nhật link cho nút Đăng Nhập và Đăng Ký -->
+            <a href="login.html" class="btn">Đăng Nhập</a>
+            <a href="register.html" class="btn">Đăng Ký</a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2025 Trung Tâm Tin Tức. Tất cả quyền được bảo lưu.</p>
+    </footer>
+</body>
+</html>
