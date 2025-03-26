@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Admin</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        /* Add some basic styles */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+        }
+        .sidebar {
+            width: 250px;
+            background-color: #2c3e50;
+            color: white;
+            padding: 20px;
+        }
+        .sidebar h2 {
+            text-align: center;
+        }
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+        }
+        .sidebar ul li {
+            margin: 10px 0;
+        }
+        .sidebar ul li a {
+            color: white;
+            text-decoration: none;
+        }
+        .main-content {
+            flex: 1;
+            padding: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+        .status-inprocess {
+            color: green;
+        }
+        .status-uninprocess {
+            color: red;
+        }
+        .details {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f0f0f0;
+        }
+        .details h3 {
+            margin-top: 0;
+        }
+        .detail-btn {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+        .detail-btn:hover {
+            background-color: #2980b9;
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <h2>Quản lý hệ thống</h2>
+        <ul>
+            <li><a href="#">Tổng quan</a></li>
+            <li><a href="index.html" id="logoutButton">Đăng xuất</a></li>
+        </ul>
+    </div>
+
+    <div class="main-content">
+        <header>
+            <h2>Danh sách tài khoản người dùng</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Tài khoản</th>
+                        <th>Mật khẩu</th>
+                        <th>Trạng thái hoạt động</th>
+                        <th>Chi tiết</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Dữ liệu tài khoản giả lập -->
+                    <tr>
+                        <td>admin1</td>
+                        <td>*******</td>
+                        <td><span class="status-inprocess">● Đang hoạt động</span></td>
+                        <td><button class="detail-btn" onclick="showDetails('admin1')">Chi tiết</button></td>
+                    </tr>
+                    <tr>
+                        <td>user2</td>
+                        <td>*******</td>
+                        <td><span class="status-uninprocess">● Không hoạt động</span></td>
+                        <td><button class="detail-btn" onclick="showDetails('user2')">Chi tiết</button></td>
+                    </tr>
+                    <tr>
+                        <td>user3</td>
+                        <td>*******</td>
+                        <td><span class="status-inprocess">● Đang hoạt động</span></td>
+                        <td><button class="detail-btn" onclick="showDetails('user3')">Chi tiết</button></td>
+                    </tr>
+                    <tr>
+                        <td>admin2</td>
+                        <td>*******</td>
+                        <td><span class="status-uninprocess">● Không hoạt động</span></td>
+                        <td><button class="detail-btn" onclick="showDetails('admin2')">Chi tiết</button></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <!-- Chi tiết tài khoản -->
+            <div id="account-details" class="details hidden">
+                <h3>Chi tiết tài khoản: <span id="account-name"></span></h3>
+                <table>
+                    <tr>
+                        <td><strong>Thời gian đăng nhập gần nhất:</strong></td>
+                        <td id="last-login"></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Số lần đăng nhập trong ngày:</strong></td>
+                        <td id="login-count"></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Tốc độ mạng trung bình (Mbps):</strong></td>
+                        <td id="avg-speed"></td>
+                    </tr>
+                </table>
+            </div>
+        </header>
+    </div>
+
+    <script>
+        // Dữ liệu giả lập cho các tài khoản
+        const accountDetails = {
+            'admin1': {
+                lastLogin: '2025-03-19 08:30',
+                loginCount: 5,
+                avgSpeed: 25
+            },
+            'user2': {
+                lastLogin: '2025-03-18 14:45',
+                loginCount: 2,
+                avgSpeed: 15
+            },
+            'user3': {
+                lastLogin: '2025-03-19 09:00',
+                loginCount: 3,
+                avgSpeed: 20
+            },
+            'admin2': {
+                lastLogin: '2025-03-17 12:10',
+                loginCount: 4,
+                avgSpeed: 30
+            }
+        };
+
+        // Hàm hiển thị chi tiết tài khoản
+        function showDetails(accountName) {
+            const details = accountDetails[accountName];
+            document.getElementById('account-name').innerText = accountName;
+            document.getElementById('last-login').innerText = details.lastLogin;
+            document.getElementById('login-count').innerText = details.loginCount;
+            document.getElementById('avg-speed').innerText = details.avgSpeed;
+
+            // Hiển thị phần chi tiết
+            document.getElementById('account-details').classList.remove('hidden');
+        }
+
+        // Xử lý sự kiện đăng xuất
+        document.getElementById('logoutButton').addEventListener('click', function() {
+            alert('Đã đăng xuất');
+        });
+    </script>
+</body>
+</html>
